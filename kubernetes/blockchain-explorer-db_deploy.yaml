@@ -1,31 +1,54 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
+  creationTimestamp: null
+  labels:
+    name: explorer-db
   name: blockchain-explorer-db
 spec:
+  progressDeadlineSeconds: 2147483647
   replicas: 1
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      name: explorer-db
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
         name: explorer-db
     spec:
-      volumes:
-      - name: fabricfiles
-        persistentVolumeClaim:
-          claimName: fabric-pvc
-
       containers:
-      - name: postgres
-        image: postgres:10.4-alpine
-        env:
+      - env:
         - name: TZ
-          value: "America/Sao_Paulo"
+          value: America/Sao_Paulo
         - name: DATABASE_DATABASE
           value: fabricexplorer
         - name: DATABASE_USERNAME
           value: hppoc
         - name: DATABASE_PASSWORD
           value: password
+        image: postgres:10.4-alpine
+        imagePullPolicy: IfNotPresent
+        name: postgres
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
         volumeMounts:
         - mountPath: /fabric
           name: fabricfiles
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: fabricfiles
+        persistentVolumeClaim:
+          claimName: fabric-pvc
+status: {}

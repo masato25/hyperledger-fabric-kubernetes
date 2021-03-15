@@ -1,13 +1,17 @@
-kind: PersistentVolumeClaim
 apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
+  creationTimestamp: null
   name: fabric-pvc
 spec:
   accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
   resources:
     requests:
       storage: 10Gi
   selector:
     matchLabels:
       name: fabricfiles
+  volumeMode: Filesystem
+status:
+  phase: Pending

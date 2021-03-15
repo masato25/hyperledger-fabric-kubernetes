@@ -1,18 +1,20 @@
-kind: PersistentVolume
 apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: fabric-pv
+  creationTimestamp: null
   labels:
-    type: local
     name: fabricfiles
+    type: local
+  name: fabric-pv
 spec:
+  accessModes:
+  - ReadWriteMany
   capacity:
     storage: 10Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
   nfs:
     path: /nfs/fabric
     server: storage.local.parisi.biz
-    readOnly: false
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+status:
+  phase: Pending

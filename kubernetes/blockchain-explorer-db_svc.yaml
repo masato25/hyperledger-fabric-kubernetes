@@ -1,15 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: blockchain-explorer-db
+  creationTimestamp: null
   labels:
     run: explorer-db
+  name: blockchain-explorer-db
 spec:
-  type: ClusterIP 
+  ports:
+  - name: pgsql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
   selector:
     name: explorer-db
-  ports:
-  - protocol: TCP
-    port: 5432
-    targetPort: 5432 
-    name: pgsql
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
